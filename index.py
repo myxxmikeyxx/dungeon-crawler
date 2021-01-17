@@ -1,5 +1,6 @@
 """Main script. Run to play game."""
 #Just a test comment
+#this is working now
 import time as timelibrary
 import pygame as pg
 import menu
