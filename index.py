@@ -171,6 +171,10 @@ class Game():
                             self.player.inventory.input("left")
                         elif event.key == pg.K_RIGHT and self.player.inventory.open:
                             self.player.inventory.input("right")
+                        elif event.key == pg.K_DOWN and self.player.inventory.open:
+                            self.player.inventory.input("down")
+                        elif event.key == pg.K_UP and self.player.inventory.open:
+                            self.player.inventory.input("up")
                         elif event.key == pg.K_SPACE and self.player.inventory.open:
                             self.player.inventory.input("space")
                             self.player.inventory.update()

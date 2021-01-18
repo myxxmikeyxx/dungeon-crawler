@@ -7,7 +7,7 @@ class UserInterface():
         self.width = assets.resolutionx
         self.height = 192
         self.vert_location = assets.resolutiony - self.height
-        self.sprite = pg.image.load("sprites/uimenu.png")
+        self.sprite = pg.image.load("sprites/uimenu.png").convert_alpha()
         # todo - transform sprites here for optimization
         sp1 = pg.image.load("sprites/goldheart.png")
         sp2 = pg.image.load("sprites/heart.png")
@@ -16,11 +16,12 @@ class UserInterface():
         self.max_health = player.max_health
         self.max_hearts = int(self.width / 140)
         self.heart_value = self.max_health / self.max_hearts
-        self.base_surface = pg.Surface((self.width, self.height))
+        self.base_surface = pg.Surface((self.width, self.height)).convert_alpha()
         self.base_surface.blit(self.sprite, (0, 0))
         self.itemdisplayborders = 10
-        self.baseitemsurface = pg.Surface((player.inventory.boxspritedim[0] * 3 + 2 * self.itemdisplayborders, player.inventory.boxspritedim[0] * 2 + self.itemdisplayborders))
-        self.baseitemsurface.fill((0, 0, 0, 255))
+        self.bsi_dimensions = (player.inventory.boxspritedim[0] * 3 + 4 * self.itemdisplayborders, player.inventory.boxspritedim[0] * 2 + self.itemdisplayborders * 3)
+        self.baseitemsurface = pg.Surface(self.bsi_dimensions).convert_alpha()
+        self.baseitemsurface.fill((0, 0, 0, 0))
 
 
     def calculate_hearts(self, player):
@@ -64,13 +65,26 @@ class UserInterface():
         itemdisplay = self.baseitemsurface.copy()
         bsd = inventory.boxspritedim[0]
         if inventory.upindex != None:
-            itemdisplay.blit(inventory.items[inventory.upindex].render_sprite, (bsd + self.itemdisplayborders, 0))
+            itemdisplay.blit(inventory.items[inventory.upindex].render_sprite, (bsd + 2 * self.itemdisplayborders, self.itemdisplayborders))
+        else:
+            itemdisplay.blit(inventory.slotswitharrows["up"], (bsd + 2 * self.itemdisplayborders, self.itemdisplayborders))
         if inventory.leftindex != None:
-            itemdisplay.blit(inventory.items[inventory.leftindex].render_sprite, (0, bsd + self.itemdisplayborders))
+            itemdisplay.blit(inventory.items[inventory.leftindex].render_sprite, (self.itemdisplayborders, bsd + 2 * self.itemdisplayborders))
+        else:
+            itemdisplay.blit(inventory.slotswitharrows["left"], (self.itemdisplayborders, bsd + 2 * self.itemdisplayborders))
         if inventory.downindex != None:
-            itemdisplay.blit(inventory.items[inventory.downindex].render_boxsprite, (bsd + self.itemdisplayborders, bsd + self.itemdisplayborders))
+            itemdisplay.blit(inventory.items[inventory.downindex].render_sprite, (bsd + 2 * self.itemdisplayborders, bsd + 2 * self.itemdisplayborders))
+        else:
+            itemdisplay.blit(inventory.slotswitharrows["down"], (bsd + 2 * self.itemdisplayborders, bsd + 2 * self.itemdisplayborders))
         if inventory.rightindex != None:
-            itemdisplay.blit(inventory.items[inventory.rightindex].render_boxsprite, ((bsd + self.itemdisplayborders) * 2, bsd + self.itemdisplayborders))
-        assets.screen.blit(itemdisplay, (0, 0))
+            itemdisplay.blit(inventory.items[inventory.rightindex].render_sprite, ((bsd + self.itemdisplayborders) * 2 + self.itemdisplayborders, bsd + 2 * self.itemdisplayborders))
+        else:
+            itemdisplay.blit(inventory.slotswitharrows["right"], ((bsd + self.itemdisplayborders) * 2 + self.itemdisplayborders, bsd + 2 * self.itemdisplayborders))
+        height = int(0.8 * self.height)
+        scaling = height / self.bsi_dimensions[1]
+        width = int(scaling * self.bsi_dimensions[0])
+        pg.transform.scale(itemdisplay, (width, height))
+        location = (int(assets.resolutionx * 3 / 4) - int(width / 2), assets.resolutiony + int((self.height - height) / 2))
+        assets.screen.blit(itemdisplay, location)
 
         

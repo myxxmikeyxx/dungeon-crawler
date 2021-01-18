@@ -47,7 +47,10 @@ class Player():
         self.animation_frame = 0
         self.facingleft = True
 
-        self.facing = 4 # numpad direction notation  
+        self.facing = 4 # numpad direction notation
+        # 7 8 9 
+        # 4 5 6 -> 4 is left
+        # 1 2 3 
         self.facing_tile = [self.x - 1, self.y]
         self.interacted = False
         self.attacked = False

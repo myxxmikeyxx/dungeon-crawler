@@ -72,6 +72,19 @@ class Inventory():
         backglow.fill((255, 200, 0))
         self.sprite.blit(backglow, (int((self.width - self.boxspritedim[0])/ 2), self.height * 0.2))
 
+        self.slotswitharrows = {}
+        arrow = spritedict["arrowup"]
+        pg.transform.scale(arrow, self.boxspritedim)
+        arrowbox = pg.Surface(self.boxspritedim).convert_alpha()
+        for direction in ["up", "right", "down", "left"]:
+            arrowbox.fill((20, 20, 20, 230))
+            arrowbox.blit(arrow.copy(), (0, 0))
+            pg.transform.rotate(arrow, 90)
+            arrowbox.blit(self.boxsprite, (0, 0))
+            self.slotswitharrows[direction] = arrowbox
+
+
+
     def input(self, key):
         """Changes inventory attributes based on the key parameter."""
         if key == "a":
